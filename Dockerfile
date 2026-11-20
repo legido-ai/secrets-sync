@@ -2,7 +2,7 @@
 # Runs with host networking (IMDS for instance principal); see Constitution 44.
 FROM python:3.12-slim
 
-RUN pip install --no-cache-dir "oci==2.192.0" \
+RUN pip install --no-cache-dir --only-binary=:all: "oci==2.192.0" \
  && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin sync
 
 COPY sync.py /sync.py

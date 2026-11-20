@@ -33,11 +33,13 @@ jobs:
       - name: Date tag
         id: date
         run: echo "date=$(date -u +'%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
-      - name: Build and push (arm64 + amd64)
+      - name: Build and push (arm64)
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/arm64,linux/amd64
+          # Both OCI hosts are Arm. Building amd64 under QEMU exhausted the
+          # runner's memory during pip install (exit 9). One native arch.
+          platforms: linux/arm64
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE }}:latest
