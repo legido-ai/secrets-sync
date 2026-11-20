@@ -1,0 +1,21 @@
+# Deployed on the prod host by the operator. Host networking is required and
+# approved (Constitution 44): the instance principal comes from IMDS, which is
+# blocked for bridged containers by the Gate 0 metadata rule.
+services:
+  secrets-sync:
+    image: ghcr.io/legido-ai/secrets-sync@sha256:<digest>
+    container_name: secrets-sync
+    network_mode: host          # IMDS + private Vault path; approved, no ports
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    environment:
+      OUT_DIR: /out
+      REFRESH_SECONDS: "300"
+      SECRETS: "app-key=ocid1.vaultsecret.oc1.<region>.<secret-ocid>"
+    volumes:
+      - /srv/secrets:/out       # host dir, mounted read-only into consumers
+    tmpfs:
+      - /tmp:size=1m,mode=0700
