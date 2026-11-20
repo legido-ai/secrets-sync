@@ -3,7 +3,7 @@
 FROM python:3.12-slim
 
 RUN pip install --no-cache-dir --only-binary=:all: "oci==2.192.0" \
- && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin sync
+ && useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin secretsync
 
 COPY sync.py /sync.py
 RUN chmod 0555 /sync.py
